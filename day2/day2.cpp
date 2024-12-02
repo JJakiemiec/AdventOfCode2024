@@ -20,7 +20,7 @@ using std::sort;
 #include <utility>
 using std::pair;
 
-
+//converts the text file into a 2 dimensional int vector
 vector<vector<int>> parseFile(string file){
     ifstream input(file);
     string line;
@@ -39,18 +39,20 @@ vector<vector<int>> parseFile(string file){
     return parsedInput;
 }
 
+//tests to see if a single report is safe
 bool isSafe(vector<int> report){
     bool increasing = true;
     if(report[0] > report[1])
         increasing = false;
     for(int i = 0; i < report.size() - 1; i++){
-            if(increasing)
+            if(increasing){
                 if(report[i] >= report[i + 1] || (report[i+1] - report[i] > 3))
                     return false;
-            if(!increasing)
+            }
+            else{
                 if(report[i] <= report[i + 1] || (report[i] - report[i+1] > 3))
                     return false;
-
+            }
         }
     return true;
 }
@@ -65,6 +67,8 @@ int part1(vector<vector<int>> input){
     return count;
 }
 
+//tests all permutations of removing one file from a report
+//if any one is safe, then returns true
 bool isRemovedSafe(vector<int> report){
     bool isPermSafe = false;
         for(int i=0;i<report.size();i++){
@@ -74,10 +78,6 @@ bool isRemovedSafe(vector<int> report){
                     perm.push_back(report[j]);
                 }
             }
-            for (int a: perm){
-                cout << a << ",";
-            }
-            cout << endl;
             isPermSafe = isSafe(perm);
             if (isPermSafe)
                 return true;
@@ -97,24 +97,7 @@ int part2(vector<vector<int>> input){
 
 int main(){
     vector<vector<int>> list = parseFile("day2-1.txt");
-    vector<int> test1 = {1,2,3,4};
-    vector<int> test2 = {4,3,2,1};
-    vector<int> test3 = {1,4,7,10};
-    vector<int> test4 = {10, 7, 4, 1};
-    vector<int> test5 = {1,2,4,3};
-    vector<int> test6 = {4,3,1,2};
-    vector<int> test7 = {1, 5, 10, 15};
-    vector<int> test8 = {15, 10, 5, 1};
-    vector<int> test9 = {10, 4, 1};
-    //cout << true << endl;
-    //cout << isSafe(test1) <<isSafe(test2) <<isSafe(test3) <<isSafe(test4) <<isSafe(test5) <<isSafe(test6) <<isSafe(test7) <<isSafe(test8) << endl;
-    //cout << isSafe(test1)<<endl;
-    //cout << part1(list) << endl;
-    //vector<vector<int>> t = {test1, test2, test3, test4, test5, test6, test7, test8};
-    //vector<vector<int>> t = {test9};
-    //cout << part2(t) << endl;
-    cout << isRemovedSafe(test9) << endl;
-    cout << part2(list) << endl;
     cout << part1(list) << endl;
+    cout << part2(list) << endl;
     return 0;
 }
