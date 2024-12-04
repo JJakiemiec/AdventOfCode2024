@@ -18,6 +18,8 @@ using std::regex;
 using std::smatch;
 using std::regex_search;
 
+//global variable, sorry
+bool isDo = true;
 
 vector<string> parseFile(string file){
     ifstream f(file);
@@ -51,7 +53,7 @@ int lineTotal(string line){
     while(regex_search(line, m, reg)){
         result += mulResult(m.str());
         line = m.suffix();
-        }
+    }
 
     return result;
 }
@@ -67,10 +69,43 @@ int part1(vector<string> input){
 }
 
 
+int lineTotal2(string line){
+    regex reg("mul\\(\\d{1,3},\\d{1,3}\\)|do\\(\\)|don't\\(\\)");
+    smatch m;
+    int result = 0;
+
+    while(regex_search(line, m, reg)){
+        //cout << m.str() << "|" << endl;
+        if(m.str().compare("do()") == 0){
+            isDo = true;
+        }
+        else if(m.str().compare("don't()") == 0){
+            isDo = false;
+        }
+        else if(isDo){
+            result+=mulResult(m.str());
+        }
+        line = m.suffix();
+    }
+
+
+    return result;
+}
+
+int part2(vector<string> input){
+    int result = 0;
+    for(string line: input){
+        result += lineTotal2(line);
+    }
+    return result;
+}
+
+
 int main(){
     vector<string> input = parseFile("day3.txt");
-    vector<string> test {"mul(1,2)heyyyymul(2,4) don't plesase mul(333,333)mul1mul(7)"};
-    cout << part1(test) << endl;
+    vector<string> test {"do()mul(1,2)heyyyymul(2,4) don't plesase don't()mul(333,333)don't()mul1mul(7)"};
+    cout << part1(input) << endl;
+    cout << part2(input) << endl;
 
 
     return 0;
