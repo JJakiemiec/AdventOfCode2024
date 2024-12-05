@@ -41,21 +41,31 @@ void printInput(vector<vector<char>> input){
 }
 
 int check(const vector<vector<char>> &input, int i, int j, int dx, int dy){
-    //TODO
-    //fix bounds issue
-    if(i > input.size() - (3 * dx) || j > input[0].size() - (3 * dy))
+
+    if((i < 3) && (dx == -1))
+        return 0;
+    if((i > input.size() - 4) && (dx == 1))
+        return 0;
+    if((j < 3) && (dy == -1))
+        return 0;
+    if((j > input[0].size() - 4) && (dy == 1))
         return 0;
 
-    if(input[i][j] == 'x')
-                if(input[i + dx][j + dy] == 'm')
-                    if(input[i + (2*dx)][j + (2*dy)] == 'a')
-                        if(input[i+ (3*dx)][j + (3*dy)] == 's'){
-                            cout << "YES" << endl;
+    if(input[i][j] == 'X')
+                if(input[i + dx][j + dy] == 'M')
+                    if(input[i + (2*dx)][j + (2*dy)] == 'A')
+                        if(input[i+ (3*dx)][j + (3*dy)] == 'S')
                             return 1;
-                        }
     return 0;
 }
 
+int check2(const vector<vector<char>> &input, int i, int j){
+        if(input[i][j] == 'A')
+            if(((input[i-1][j-1] == 'M') && (input[i+1][j+1] == 'S')) || ((input[i-1][j-1] == 'S') && (input[i+1][j+1] == 'M')))
+                if(((input[i-1][j+1] == 'M') && (input[i+1][j-1] == 'S')) || ((input[i-1][j+1] == 'S') && (input[i+1][j-1] == 'M')))
+                    return 1;
+    return 0;
+}
 int part1(vector<vector<char>> input){
     int result = 0;
 
@@ -75,11 +85,24 @@ int part1(vector<vector<char>> input){
     return result;
 }
 
+int part2(vector<vector<char>> input){
+    int result = 0;
+
+    for(int i=1; i<input.size()-1; i++){
+        for(int j=1; j < input[0].size()-1; j++){
+            result += check2(input, i, j);
+        }
+    }
+
+    return result;
+}
+
 int main(){
     //vector<vector<char>> test{{'x','m','a','s','x'}, {'1','2','x','m','a','s','3'},{'s','a','m','x'},{'x','s'},{'m','a'},{'a','m'},{'s','x'}};
     vector<vector<char>> test = parseInput("day4test.txt");
     vector<vector<char>> input = parseInput("day4.txt");
     //printInput(input);
-    cout << part1(test) << endl;
+    cout << part1(input) << endl;
+    cout << part2(input) << endl;
     return 0;
 }
